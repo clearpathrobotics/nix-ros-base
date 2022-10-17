@@ -1,4 +1,4 @@
-# nix-base
+# nix-ros-base
 
 This repository supplies the base Nix content which underpins the generated
 package definitions available in [`nix-ros`][nixros]. Included here are
@@ -11,7 +11,6 @@ as outputs— currently its outputs are exclusively intended to be consumed
 by the generated snapshot flakes. However, the `flake.lock` in this repo
 is critically important, as it controls which versions of our upstream
 dependencies (nixpkgs, nix-ros-overlay) we are pinned to.
-
 
 ## Usage
 
@@ -49,13 +48,14 @@ workspaces can be created to extend the base ROS installation.
 Some starting points to find your way around in this repository.
 
 ### lib
+
 The [lib](./lib) directory contains the 'meat' of this repository. This
 provides the main functionality necessary to build and use ROS through nix;
 
 - `buildColconPackage` is a wrapper around `mkDerivation` that makes it more
 convenient to build ros packages by providing an abstraction of the actual
 `colcon` build. This function takes in various arguments, the main ones are
-the `colconBuildDepends`, `colconRunDepends` and `colconRunDepends`. This
+the `colconBuildDepends`, `colconRunDepends` and `colconTestDepends`. This
 also provides various subtargets like running unit tests for a particular
 package. The `.ws` subtarget creates a colcon workspace with just this package
 in it.
@@ -66,14 +66,15 @@ properties and subtargets for example to enter an environment with debug
 symbols or run unit tests.
 
 ### nix_generator
+
 The [nix_generator](./nix_generator) directory holds the Python files and
 templates that are used to generate the nix files found in the main
 [nix-ros][nixros] flake repository.
 
 This directory also holds various tools that allow interacting with Hydra
 through a commandline interface or Python class. This can, for example be
-used to control Hydra from a different CI system like Jenkins or Gitlab CI.
-Use this with `poetry install`, followed by `poetry run hydra`.
+used to control Hydra from a different CI system like Jenkins, Actions, or
+GitLab CI. Use this with `poetry install`, followed by `poetry run hydra`.
 
 ### colcon & flags
 
@@ -93,7 +94,6 @@ are mixins to compile with clang or ccache.
 
 Some packages may need extra overrides to ensure they build correctly, or
 changes to the source code may be necessary to accomodate their use in Nix.
-
 
 [nixros]: https://github.com/clearpathrobotics/nix-ros/
 [nix-ros-cachix]: https://app.cachix.org/cache/nix-ros#pull

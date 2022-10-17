@@ -121,7 +121,7 @@ def main():
 
     # Determine distro snapshot and version string.
     if args.ref:
-        ref = sanitize_ref(args.ref, args.series)
+        ref = sanitize_ref(args.ref)
         if ref != args.ref:
             logging.warn(f"Provided ref '{args.ref}' was not a full ref, using '{ref}'.")
     else:

@@ -1,0 +1,52 @@
+{
+    "freezing": {
+        "indigo": {
+            "metadata": {
+                "name": "indigo",
+                "url": [
+                    "file:///home/iwanders/Documents/workspace/NIX/develop/build_tools_dev/rosdistro_internal/indigo/distribution.yaml"
+                ]
+            },
+            "distribution": {
+                "cpr_sbpl": {
+                    "url": "git@gitlab.clearpathrobotics.com:controls/cpr_sbpl.git",
+                    "original_version": "devel",
+                    "branch_requested": "SES-2447-jenkins-integration",
+                    "branch_only": true,
+                    "version": null
+                },
+                "cpr_robot_insight": {
+                    "url": "git@gitlab.clearpathrobotics.com:controls/cpr_robot_insight.git",
+                    "original_version": "devel",
+                    "branch_requested": "SES-2447-jenkins-integration",
+                    "branch_only": true,
+                    "version": "5c36d89fc7f72ce076f6988d419c2d917bcf6164"
+                },
+                "analysis_helper_tools": {
+                    "url": "git@gitlab.clearpathrobotics.com:controls/analysis_helper_tools.git",
+                    "original_version": "devel",
+                    "branch_requested": "SES-2447-jenkins-integration",
+                    "branch_only": true,
+                    "version": null
+                }
+            }
+        },
+        "ros2": {
+            "metadata": {
+                "name": "ros2",
+                "url": [
+                    "file:///home/iwanders/Documents/workspace/NIX/develop/build_tools_dev/rosdistro_internal/ros2/distribution.yaml"
+                ]
+            },
+            "distribution": {
+                "ament/ament_cmake": {
+                    "url": "git@gitlab.clearpathrobotics.com:ros2/ament_cmake.git",
+                    "original_version": "1.1.4",
+                    "branch_requested": "SES-2447-jenkins-integration",
+                    "branch_only": true,
+                    "version": null
+                }
+            }
+        }
+    }
+}

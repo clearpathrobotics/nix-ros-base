@@ -1,0 +1,39 @@
+-g
+-O2
+-fPIC
+-frecord-gcc-switches
+-maes
+-march=core-avx-i
+-mavx
+-mcx16
+-mf16c
+-mfsgsbase
+-mfxsr
+-mno-abm
+-mno-adx
+-mno-avx2
+-mno-bmi
+-mno-bmi2
+-mno-fma
+-mno-fma4
+-mno-hle
+-mno-lwp
+-mno-lzcnt
+-mno-movbe
+-mno-prfchw
+-mno-rdseed
+-mno-rtm
+-mno-tbm
+-mno-xop
+-mpclmul
+-mpopcnt
+-mrdrnd
+-msahf
+-msse4.1
+-msse4.2
+-mtune=core-avx-i
+-mxsave
+-mxsaveopt
+--param l1-cache-line-size=64
+--param l1-cache-size=32
+--param l2-cache-size=6144

@@ -18,19 +18,17 @@
         flake = "@(flake_tag)";
       };
     in
-    base.eachRosSystem (system: rec {
-      packages = base.makeRosPackages {
+      packages = (base.makeRosPackages {
         system = system;
         base-overlays = base-overlays;
         top-level-metadata = refs;
+      }) // {
+        ci = (base.nixpkgs.legacyPackages.${system}.linkFarm "ros-ci"
+            (base.ciPackages packages));
       };
 
       # Defines the package that is used for a bare "nix develop"
-      defaultPackage = packages.sdk;
-
-      # Hydra jobs are specified in the common flake rather than
-      # hard-coded here.
-      hydraJobs = base.hydraJobs packages;
+      defaultPackage = packages.noetic.desktop_full;
 
       # Pass this through so it's conveniently usable for workspace flakes.
       inherit (base.nixpkgs.legacyPackages.${system}) mkShell;

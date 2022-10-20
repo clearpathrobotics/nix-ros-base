@@ -17,7 +17,7 @@
         rosdistro = "@(rosdistro_ref)";
         flake = "@(flake_tag)";
       };
-    in
+    in base.eachRosSystem (system: rec {
       packages = (base.makeRosPackages {
         system = system;
         base-overlays = base-overlays;

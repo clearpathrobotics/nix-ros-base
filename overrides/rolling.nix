@@ -54,11 +54,7 @@ in rosFinal: rosPrev: {
   inherit python3;
   python3Packages = python3.pkgs;
 
-  boost = pkgs.boost173.override {
-    python = rosFinal.python3;
-    enablePython = true;
-    enableNumpy = true;
-  };
+  boost = pkgs.ros-boost;
 
   gbenchmark = pkgs.gbenchmark.overrideAttrs(_: {
     cmakeFlags = [ "-DBUILD_SHARED_LIBS=ON" ];

@@ -74,8 +74,8 @@
     # Pass through the list of Hydra CI jobs we want so that we don't have
     # to hard code that in the generator's template.
     ciPackages = packages: [
-      { name = "noetic-ros-base"; path = packages.noetic.ros_base.ws.contents; }
-      { name = "rolling-ros-base"; path = packages.rolling.ros_base.ws.contents; }
+      { name = "noetic-ros-base"; path = packages.noetic.desktop_full.ws.contents; }
+      { name = "rolling-ros-base"; path = packages.rolling.desktop_full.ws.contents; }
     ];
   };
 }

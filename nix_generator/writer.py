@@ -53,6 +53,9 @@ class Writer:
         with open(output_path / ".gitignore", "w") as output:
             output.write(GITIGNORE_CONTENTS)
 
+        with open(output_path / "README.md", "w") as output:
+            output.write(get_data(__package__, f"templates/README.md").decode())
+
         github_action_path = output_path / ".github" / "workflows" / "build.yml"
         github_action_path.parent.mkdir(exist_ok=True, parents=True)
         with open(github_action_path, "w") as output:

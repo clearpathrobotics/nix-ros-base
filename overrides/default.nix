@@ -61,7 +61,7 @@ in {
     enablePython = true;
     enableUnfree = true;
     enableVtk = true;
-    pythonPackages = final.ros.python3Packages;
+    pythonPackages = python3.pkgs;
     openblas = final.openblasCompat;
   }).overrideAttrs(old: {
     buildInputs = old.buildInputs ++ [ final.gtk3 ];
@@ -90,7 +90,7 @@ in {
     boost = final.ros-boost;
   }).overrideAttrs(old: rec {
     propagatedBuildInputs = old.propagatedBuildInputs ++ [ final.xorg.libXt ];
-    CXXFLAGS = "${toString final.clearpathCompileFlags} -std=c++11";
+    CXXFLAGS = "${toString final.rosCompileFlags} -std=c++11";
     patches = [
       (final.fetchpatch {
         url = "https://github.com/PointCloudLibrary/pcl/commit/614e19d96bd8415dbfb52d86df0f3774a9f462fe.patch";

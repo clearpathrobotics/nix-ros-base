@@ -47,7 +47,7 @@
     # or else Hydra tries to build for aarch64 and so on, and we get errors
     # for packages like CUDA that aren't available there.
     eachRosSystem = flake-utils.lib.eachSystem [ defaultRosSystem ];
-    makeRosPackages = {system, base-overlays, extra-overlays ? [], top-level-metadata ? null }: (import nixpkgs {
+    makeRosPackages = { system, base-overlays, extra-overlays ? [], top-level-metadata ? null }: (import nixpkgs {
         inherit system;
         config.allowUnfree = true;
         overlays = base-overlays ++ overlays ++
@@ -73,6 +73,9 @@
 
     # Pass through the list of Hydra CI jobs we want so that we don't have
     # to hard code that in the generator's template.
-    hydraJobs = import ./hydra.nix;
+    ciPackages = packages: [
+      { name = "noetic-ros-base"; path = packages.noetic.ros_base.ws.contents; }
+      { name = "rolling-ros-base"; path = packages.rolling.ros_base.ws.contents; }
+    ];
   };
 }

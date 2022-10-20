@@ -53,6 +53,11 @@ class Writer:
         with open(output_path / ".gitignore", "w") as output:
             output.write(GITIGNORE_CONTENTS)
 
+        github_action_path = output_path / ".github" / "workflows" / "build.yml"
+        github_action_path.parent.mkdir(exist_ok=True, parents=True)
+        with open(github_action_path, "w") as output:
+            output.write(get_data(__package__, f"templates/github-workflows-build.yml").decode())
+
     def write_srcs_files(self):
         for repo_name, repo_dict in self.repositories.items():
             package_dicts = [

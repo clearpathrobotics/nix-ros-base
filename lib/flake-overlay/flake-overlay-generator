@@ -1,0 +1,155 @@
+#!/usr/bin/env python3
+
+import sys
+import argparse
+import em
+import json
+import difflib
+
+import os
+curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
+
+def load_targets():
+    with open(os.path.join(curdir, "flake-metadata.json")) as f:
+        d = json.load(f)
+    return d["overlay_targets"]
+    
+
+def get_packages(targets):
+    return targets["packages"]
+
+def get_repositories(targets):
+    return targets["repositories"]
+
+def get_metadata():
+    with open(os.path.join(curdir, "flake-metadata.json")) as f:
+        d = json.load(f)
+    return d["flake-metadata"]
+
+def load_template():
+    with open(os.path.join(curdir, "flake.nix.em")) as f:
+        return f.read()
+
+def target_list():
+    all_targets = []
+    targets = load_targets()
+    for scope, packages in sorted(get_packages(targets).items()):
+        for p in sorted(packages):
+            all_targets.append(f"{scope}.{p}")
+    for scope, repositories in sorted(get_repositories(targets).items()):
+        for p in sorted(repositories):
+            all_targets.append(f"{scope}.by_repo.{p}")
+    return all_targets
+
+
+# Ignore packages from this namespace and name even if they are in the freeze branch.
+ignore_proposed = {
+    ("ros", "ros1_bridge")
+}
+
+def load_targets_from_freeze_branches(freeze_json):
+    with open(freeze_json) as f:
+        d = json.load(f)
+    targets = []
+    namespace_remap = {"indigo": "ros"} # ros1 scope is called indigo in rosdistro.
+    for namespace, distribution in d["freezing"].items():
+        for repo_name, repo_info in distribution["distribution"].items():
+            if repo_info["version"] is not None:
+                # Found the branch, add this repository.
+                repo_namespace = namespace_remap.get(namespace, namespace)
+                repo_name = repo_name.replace("/", "_")
+
+                # Check if we should ignore this namespace and repo name combination
+                if not (repo_namespace, repo_name) in ignore_proposed:
+                    targets.append(f"{repo_namespace}.by_repo.{repo_name}")
+    return targets
+    
+
+
+# Command handler to create the workspace flake.
+def run_workspace(args):
+
+    present = set()
+    if not args.standalone:
+        present = set(target_list())
+
+    actual_packages = []
+
+    proposed_targets = args.targets
+
+    if args.from_freeze_json is not None:
+        proposed_targets = load_targets_from_freeze_branches(args.from_freeze_json)
+
+    for proposed in proposed_targets:
+        # If not running standalone, check if the package is present, if not provide feedback.
+        if not args.standalone and not proposed in present:
+            # Fail here, user passed in a package we don't know.
+            print(f"Error; Package {proposed} is not present in this bundle.")
+            alternatives = difflib.get_close_matches(proposed, present)
+            if alternatives:
+                print("Possibly you meant one of the following:")
+                for alt in sorted(alternatives):
+                    print(f"  {alt}")
+            sys.exit(1)
+        actual_packages.append(proposed)
+
+    # Now, we can do the whole template substitution and then write the flake file.
+    if os.path.isfile(args.output):
+        print(f"Output file {args.output} already exists, aborting.")
+        sys.exit(1)
+
+    formatted_packages = "\n                ".join(actual_packages)
+
+    flake = args.flake
+    if flake is None:
+        flake = "clearpath/" + get_metadata()["flake"]
+
+    with open(args.output, "w") as output:
+        v = {"packages": formatted_packages
+             , "backing_bundle": flake
+             , "hydra_workspace_target": args.hydra_workspace_target}
+        i = em.Interpreter(output=output, globals=v)
+        i.string(load_template())
+        i.shutdown()
+
+
+def run_list_packages(args):
+    for p in target_list():
+        print(p)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="A helper to generate overlays on top of a bundle.")
+    parser.add_argument("--standalone", default=False, action="store_true", help="Set this flag when invoked outside"
+                        " of a 'bundle' context, so when invoked directly as a python script versus a nix run. This "
+                        " disables loading of the package lists that provides safeguards for users.")
+
+    subparsers = parser.add_subparsers(dest="command")
+    workspace_parser = subparsers.add_parser("workspace", help="Generate an overlay with packages in a workspace.")
+    workspace_parser.add_argument("targets", nargs="*", help="Provide a list of packages to use in the custom "
+                                  "workspace. Packages must be prefixed with their scope, so 'ros.move_base' or "
+                                  " 'ros2.cpr_api_adaptor'. You can also specify all packages in a repository with "
+                                  " 'ros.by_repo.cpr_navigation' repo names match the rosdistro entries.")
+    workspace_parser.add_argument("--flake", default = None, type=str, help="Specify the flake to use, instead of "
+                                  "getting it from the metadata in the nix bundle.")
+    workspace_parser.add_argument("--hydra-workspace-target", default = "contents", help="HydraJobs workspace "
+                                  " target to use (also used as hydra job name).")
+    workspace_parser.add_argument("--from-freeze-json", type=str, default=None, help="File path for the "
+                                  "freeze json output file as written by freeze_source_to_tag, the repositories for "
+                                  " which the branch existed will be used as packages.")
+
+    workspace_parser.add_argument("-o", "--output", default = "flake.nix", help="Output location to write to.")
+    workspace_parser.set_defaults(func=run_workspace)
+
+    list_packages_parser = subparsers.add_parser("list", help="List all known ros packages in this flake.")
+    list_packages_parser.set_defaults(func=run_list_packages)
+
+
+    args = parser.parse_args()
+
+    if (args.command is None):
+        parser.print_help()
+        parser.exit()
+        sys.exit(1)
+
+    args.func(args)

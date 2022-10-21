@@ -31,10 +31,6 @@ let
       else ff;
 
 in {
-  fetchFromClearpathGitLab = prev.callPackage ./fetch-gitlab.nix {};
-
-  fetchdeb = prev.callPackage ./fetchdeb.nix {};
-
   quietSymlinkJoin = prev.callPackage ./quiet-symlink-join.nix { };
   catkinTestData = prev.callPackage ./catkin-test-data.nix { };
 

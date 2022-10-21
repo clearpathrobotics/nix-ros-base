@@ -6,7 +6,7 @@ final: prev: {
     colcon-cmake
     colcon-core
     colcon-defaults
-    colcon-document
+    # colcon-document
     colcon-library-path
     colcon-metadata
     colcon-mixin
@@ -17,7 +17,6 @@ final: prev: {
     colcon-python-setup-py
     colcon-recursive-crawl
     colcon-ros
-    colcon-ros-python
     colcon-test-result
   ];
 
@@ -32,12 +31,11 @@ final: prev: {
     colcon-mixin
     colcon-python-setup-py
     colcon-ros
-    colcon-ros-python
   ];
 
   colconMinimalDocs = with final.python3.pkgs; colcon-core.withExtensions [
     colcon-core
-    colcon-document
+    # colcon-document
     colcon-recursive-crawl
   ];
 
@@ -69,9 +67,8 @@ final: prev: {
           catkin-sphinx = pyFinal.callPackage ./catkin-sphinx.nix {};
           pydoctor = pyFinal.callPackage ./pydoctor.nix {};
 
-          # Internal, Clearpath-developed colcon extensions.
-          colcon-document = pyFinal.callPackage ./document.nix {};
-          colcon-ros-python = pyFinal.callPackage ./ros-python.nix {};
+          # Clearpath-developed colcon extensions.
+          # colcon-document = pyFinal.callPackage ./document.nix {};
         });
       }
     )
@@ -99,7 +96,7 @@ final: prev: {
     colcon-cmake
     colcon-core
     colcon-defaults-with-changes
-    colcon-document
+    # colcon-document
     colcon-library-path
     colcon-metadata
     colcon-mixin-with-changes
@@ -110,7 +107,6 @@ final: prev: {
     colcon-python-setup-py
     colcon-recursive-crawl
     colcon-ros
-    colcon-ros-python
     colcon-test-result
   ];
 

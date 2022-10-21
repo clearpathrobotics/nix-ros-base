@@ -14,7 +14,9 @@ dependencies (nixpkgs, nix-ros-overlay) we are pinned to.
 
 ## Usage
 
-Add the repositories to your nix flake registry with:
+Add the repositories to your nix flake registry (so flakes need to be enabled)
+with:
+
 ```
 nix registry add ros github:clearpathrobotics/nix-ros
 nix registry add ros-base github:clearpathrobotics/nix-ros-base
@@ -133,3 +135,7 @@ changes to the source code may be necessary to accomodate their use in Nix.
 We're delighted to collaborate long-term with other users of Nix and ROS, however
 there's no commitment to support of the nix-ros and nix-ros-base repositories;
 these were prepared specifically for a talk given at ROSCon 2022.
+
+## Credits
+
+This work would not have been possible without @lopsided98 's [nix-ros-overlay](https://github.com/lopsided98/nix-ros-overlay/) repository.

@@ -14,34 +14,63 @@ dependencies (nixpkgs, nix-ros-overlay) we are pinned to.
 
 ## Usage
 
-Add the flake repositories to your nix installation with:
+Add the repositories to your nix flake registry with:
 ```
 nix registry add ros github:clearpathrobotics/nix-ros
 nix registry add ros-base github:clearpathrobotics/nix-ros-base
 ```
 
-To avoid rebuilding everything, one can use the public cache for
+To avoid rebuilding, one can optionally use the public binary cache for
 [nix-ros][nix-ros-cachix] on cachix.
 
 With those one-time steps done, we can now build a ros 'installation' that
 holds the packages present in `ros_base` with:
 ```
-nix build ros/latest#noetic.ros_base.ws.contents
+nix build ros#noetic.ros_base.ws.contents
 ```
-A `result` symlink is now availabe to inspect a ros installation that has
-everything in `ros_base`.
+
+You can also reference a specific flake tag snapshot if desired:
+```
+nix build ros/20221020-1#noetic.ros_base.ws.contents
+```
+
+A `result` symlink is now available to inspect a ros installation that has
+everything in `ros_base`. This symlink ensures that Nix [garbage collection][gc]
+will not remove these paths from the store.  
 
 To use this installation we can enter a subshell that uses the binaries of
 this installation with:
 ```
-nix develop ros/latest#noestic.ros_base.ws
+nix develop ros#noetic.ros_base.ws
 ```
 
-This also provides the tools and dependencies that were used to build this
-package (or packages). The binaries from `ros_base` are available in this
+This environment provides the tools and dependencies that were used to build
+this package (or packages). The binaries from `ros_base` are available in this
 subshell, so `rostopic` and other base tools are available. This step is
 equivalent to sourcing a ros installation and after this step developer 
 workspaces can be created to extend the base ROS installation.
+
+## Architecture
+
+This demonstration uses the ROS package definitions from upstream rosdistro:
+
+https://github.com/ros/rosdistro/
+
+These are frozen and snapshotted daily by a Github Action in our snapshots repo:
+
+https://github.com/clearpathrobotics/rosdistro-snapshots
+
+The snapshots are then cached by our colcon-distro instance, for example:
+
+http://colcon-distro.ext.ottomotors.com/get/noetic/snapshot/20221020.json
+
+The code for this caching layer is in these two repos:
+
+- https://github.com/clearpathrobotics/colcon-distro
+- https://github.com/clearpathrobotics/colcon-nix
+
+The cache allows the generator in this repo to have access to package content
+hashes without needing to download the source.
 
 ## What's where
 
@@ -97,3 +126,10 @@ changes to the source code may be necessary to accomodate their use in Nix.
 
 [nixros]: https://github.com/clearpathrobotics/nix-ros/
 [nix-ros-cachix]: https://app.cachix.org/cache/nix-ros#pull
+[gc]: https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-store-gc.html
+
+## Disclaimer
+
+We're delighted to collaborate long-term with other users of Nix and ROS, however
+there's no commitment to support of the nix-ros and nix-ros-base repositories;
+these were prepared specifically for a talk given at ROSCon 2022.

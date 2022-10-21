@@ -71,11 +71,11 @@
     # flake, since this contains overrides which are applied on top.
     overlays = overlays;
 
-    # Pass through the list of Hydra CI jobs we want so that we don't have
+    # Pass through the list of CI jobs we want so that we don't have
     # to hard code that in the generator's template.
     ciPackages = packages: [
-      { name = "noetic-ros-base"; path = packages.noetic.desktop_full.ws.contents; }
-      { name = "rolling-ros-base"; path = packages.rolling.desktop_full.ws.contents; }
+      { name = "noetic"; path = packages.noetic.ros_base.ws.contents; }
+      { name = "rolling"; path = packages.rolling.ros_base.ws.contents; }
     ];
   };
 }

@@ -201,21 +201,12 @@ arguments is invoked. This provides developers with sane defaults that are
 exactly identical to what is used to build the package itself. Also provided
 are mixins to compile with clang or ccache.
 
-## Disclaimer
+## Credit
 
-We're delighted to collaborate long-term with other users of Nix and ROS, however
-there's no commitment to support of the nix-ros and nix-ros-base repositories;
-these were prepared specifically for a talk given at ROSCon 2022.
-
-[nixros]: https://github.com/clearpathrobotics/nix-ros/
-[gc]: https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-store-gc.html
-
-
-## Credits
-
-This work would not have been possible without @lopsided98's work on packaging
+Our work would not have been possible without [lopsided98][l]'s efforts on packaging
 ROS for Nix in the [nix-ros-overlay][nro] repository, and in particular doing the
-work of packaging the system dependencies such as `catkin_pkg` and Gazebo.
+work needed to ship the ROS system underlay, including packages like `catkin_pkg` and
+Gazebo.
 
 Some key differences between the approach there and this one include:
 
@@ -233,8 +224,19 @@ Some key differences between the approach there and this one include:
   converting underscores to dashes).
 - This project is a singular snapshot in time and won't be actively maintained, unless
   interested third parties step up to take it on.
+- This project is flake-only; it doesn't support the legacy `nix-build` workflow.
 
-Overally, `nix-ros-overlay` strives to align more closely to upstream Nix packaging
+Overall, `nix-ros-overlay` strives to align more closely to upstream Nix packaging
 conventions and expectations than this one does.
 
+[l]: https://github.com/lopsided98/
 [nro]: https://github.com/lopsided98/nix-ros-overlay/
+
+## Disclaimer
+
+We're delighted to collaborate long-term with other users of Nix and ROS, however
+there's no commitment to offer ongoign support for the nix-ros and nix-ros-base
+repositories; these were prepared specifically for a talk given at ROSCon 2022.
+
+[nixros]: https://github.com/clearpathrobotics/nix-ros/
+[gc]: https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-store-gc.html

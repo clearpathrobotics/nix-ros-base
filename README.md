@@ -235,7 +235,7 @@ conventions and expectations than this one does.
 ## Disclaimer
 
 We're delighted to collaborate long-term with other users of Nix and ROS, however
-there's no commitment to offer ongoign support for the nix-ros and nix-ros-base
+there's no commitment to offer ongoing support for the nix-ros and nix-ros-base
 repositories; these were prepared specifically for a talk given at ROSCon 2022.
 
 [nixros]: https://github.com/clearpathrobotics/nix-ros/

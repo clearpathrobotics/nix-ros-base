@@ -14,13 +14,14 @@
     nixgl.url = "github:guibou/nixGL";
 
     # Easy bundling of our Poetry-based generator and API client for Nix.
-    poetry2nix-flake = {
-      url = "github:nix-community/poetry2nix";
+    poetry2nix = {
+      # Pending: https://github.com/nix-community/poetry2nix/pull/783
+      url = "github:nix-community/poetry2nix/844ab804b51ad65beb6bb78831b1acbbeb2b54c7";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, nix-ros-overlay, flake-utils, nixgl, poetry2nix-flake }:
+  outputs = { self, nixpkgs, nix-ros-overlay, flake-utils, nixgl, poetry2nix }:
   let
     overlays = [
       nix-ros-overlay.overlays.default
@@ -34,10 +35,10 @@
 
     defaultRosSystem = "x86_64-linux";
 
-    poetry2nix = (import nixpkgs {
+    mkPoetryApplication = (import nixpkgs {
       system = defaultRosSystem;
-      overlays = [ poetry2nix-flake.overlay ];
-    }).poetry2nix;
+      overlays = [ poetry2nix.overlay ];
+    }).poetry2nix.mkPoetryApplication;
 
   in
   {
@@ -63,12 +64,12 @@
           ] ++ extra-overlays;
       });
 
-    nix-generator = poetry2nix.mkPoetryApplication {
+    generate = (mkPoetryApplication {
       projectDir = ./.;
-
-      # pydpkg failed to build from source, so just use wheels for everything.
-      preferWheels = true;
-    };
+    }).overrideAttrs(_: {
+      # Setting this name equal to the executable allows `nix run` usage.
+      pname = "generate";
+    });
 
     # These overlays must come after the generated ones from the snapshot
     # flake, since this contains overrides which are applied on top.

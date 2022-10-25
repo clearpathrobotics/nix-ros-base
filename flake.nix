@@ -14,7 +14,10 @@
     nixgl.url = "github:guibou/nixGL";
 
     # Easy bundling of our Poetry-based generator and API client for Nix.
-    poetry2nix-flake.url = "github:nix-community/poetry2nix";
+    poetry2nix-flake = {
+      url = "github:nix-community/poetry2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, nix-ros-overlay, flake-utils, nixgl, poetry2nix-flake }:
@@ -64,7 +67,7 @@
       projectDir = ./.;
 
       # pydpkg failed to build from source, so just use wheels for everything.
-      # preferWheels = true;
+      preferWheels = true;
     };
 
     # These overlays must come after the generated ones from the snapshot

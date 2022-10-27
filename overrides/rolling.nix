@@ -89,13 +89,23 @@ in rosFinal: rosPrev: {
     };
   };
 
-  mimick_vendor = (patchVendorGit rosPrev.mimick_vendor {
+  mimick_vendor = patchVendorGit (
+    rosPrev.mimick_vendor.overrideColconAttrs(_: {
+      patches = [
+        # Pending: https://github.com/ros2/mimick_vendor/pull/26
+        (fetchpatch {
+          url = "https://github.com/ros2/mimick_vendor/commit/e57ed638c309a6b51a6b137f8103b7e002f69fec.patch";
+          hash = "sha256-ofpuKyZaWBUgxLC4Cow7NyTPqvW94hdtetSSdMcAWc4=";
+        })
+      ];
+    }))
+  {
     url = "https://github.com/ros2/Mimick.git";
     fetchgitArgs = {
-      rev = "a819614f43592f551697e5bc9dba8a16e7d9f44d";
-      sha256 = "sha256-LHz0xFt7Q1HKPJBDUnQoHEPbWLZ2zBwj4vxy0LZ2c5c=";
+      rev = "de11f8377eb95f932a03707b583bf3d4ce5bd3e7";
+      sha256 = "sha256-adCxIl0F3QkgSimOhvuTyhmig1rFy/K9wxZ/+YCuxYo=";
     };
-  });
+  };
 
   rmw_implementation = rosPrev.rmw_implementation.overrideColconAttrs(old: {
     colconRunDepends = old.colconRunDepends ++ [ rosFinal.rmw_cyclonedds_cpp ];

@@ -176,15 +176,18 @@ templates that are used to generate the nix files found in the main
 [nix-ros][nixros] flake repository. You can iterate on the generator
 and then run it locally with:
 ```
-poetry install
-poetry run generate -o /path/to/nix-ros
+nix run /path/to/nix-ros-base#generate -o /path/to/nix-ros
 nix develop /path/to/nix-ros#noetic.ros_base.ws
 ```
+
+However, this will rebuild the module each time the source changes, so for
+development, it may be more ergonomic to do `poetry install` and then
+`poetry run generate`.
 
 This directory also holds various tools that allow interacting with Hydra
 through a commandline interface or Python class. This can, for example be
 used to control Hydra from a different CI system like Jenkins, Actions, or
-GitLab CI. Use this with `poetry install`, followed by `poetry run hydra`.
+GitLab CI. Use this with `poetry run hydra`.
 
 ### colcon & flags
 

@@ -71,7 +71,7 @@ class Writer:
 
             repo_file = self.packages_path / "srcs" / f"{repo_name}.nix"
             repo_file.parent.mkdir(exist_ok=True, parents=True)
-            with open(repo_file, "w") as output:
+            try:
                 git_parts = URL_REGEX.match(repo_dict["url"])
                 host_repo = git_parts.group("repo").split(".git")[0]
                 package_dicts.sort(key=itemgetter("name"))
@@ -87,7 +87,11 @@ class Writer:
                     "safe_rev": sanitize_store_name(repo_dict["version"]),
                     "packages": package_dicts,
                 }
+            except KeyError:
+                logger.exception(f"Skipping repo {repo_name} due to missing fields.")
+                continue
 
+            with open(repo_file, "w") as output:
                 i = em.Interpreter(output=output, globals=v)
                 i.string(self.get_template("src.nix"))
                 i.shutdown()

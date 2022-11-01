@@ -15,8 +15,7 @@
 
     # Easy bundling of our Poetry-based generator and API client for Nix.
     poetry2nix = {
-      # Pending: https://github.com/nix-community/poetry2nix/pull/783
-      url = "github:nix-community/poetry2nix/844ab804b51ad65beb6bb78831b1acbbeb2b54c7";
+      url = "github:nix-community/poetry2nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

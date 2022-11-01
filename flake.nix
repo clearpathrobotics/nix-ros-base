@@ -1,7 +1,8 @@
 {
   inputs = {
     # Main nixpkgs/NixOS package repository, containing most deps.
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # Temporarily locked for https://github.com/NixOS/nixpkgs/pull/198938
+    nixpkgs.url = "github:nixos/nixpkgs/6739decba354";
 
     # This is Ben Wolsieffer's repo, containing definitions for Gazebo,
     # catkin-pkg, colcon, and numerous other low-level ROS dependencies.

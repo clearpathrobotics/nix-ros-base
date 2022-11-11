@@ -12,6 +12,13 @@ by the generated snapshot flakes. However, the `flake.lock` in this repo
 is critically important, as it controls which versions of our upstream
 dependencies (nixpkgs, nix-ros-overlay) we are pinned to.
 
+This repo is supplementary content to a talk given at ROSCon 2022, in
+Kyoto, Japan.
+
+Video: https://vimeo.com/showcase/9954564/video/767139940
+
+Slides: http://download.ros.org/downloads/roscon/2022/Better%20ROS%20Builds%20with%20Nix.pdf
+
 ## Nix Installation
 
 You can get Nix by the upstream-suggested `curl` install, by installing the
